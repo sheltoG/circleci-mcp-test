@@ -1,0 +1,67 @@
+version: 2.1
+
+orbs:
+  node: circleci/node@5.2.0
+
+# ---------------------------------------------------------
+# This config is designed to demonstrate MCP debugging:
+#   - a job that fails due to a real error
+#   - a job with a flaky test (random failure)
+#   - a passing baseline job
+# ---------------------------------------------------------
+
+workflows:
+  ci:
+    jobs:
+      - test-unit
+      - test-flaky
+      - test-failing
+      - lint
+
+jobs:
+  # ✅ Baseline: always passes
+  test-unit:
+    docker:
+      - image: cimg/node:20.9
+    steps:
+      - checkout
+      - node/install-packages
+      - run:
+          name: Run unit tests
+          command: npm test -- --testPathPattern=unit
+
+  # ⚠️  Flaky: fails ~30% of the time based on timing/random seed
+  test-flaky:
+    docker:
+      - image: cimg/node:20.9
+    steps:
+      - checkout
+      - node/install-packages
+      - run:
+          name: Run flaky tests
+          command: npm test -- --testPathPattern=flaky
+
+  # ❌ Intentionally failing: missing env var, simulates a real misconfiguration
+  test-failing:
+    docker:
+      - image: cimg/node:20.9
+    environment:
+      # DATABASE_URL intentionally omitted — job will fail
+      NODE_ENV: test
+    steps:
+      - checkout
+      - node/install-packages
+      - run:
+          name: Run integration tests (requires DATABASE_URL)
+          command: npm test -- --testPathPattern=integration
+
+  # ✅ Lint: always passes
+  lint:
+    docker:
+      - image: cimg/node:20.9
+    steps:
+      - checkout
+      - node/install-packages
+      - run:
+          name: Run linter
+          command: npm run lint

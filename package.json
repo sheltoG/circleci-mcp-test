@@ -1,0 +1,13 @@
+{
+  "name": "circleci-mcp-test",
+  "version": "1.0.0",
+  "description": "Test project for evaluating CircleCI MCP server capabilities",
+  "scripts": {
+    "test": "jest",
+    "lint": "eslint src/ --ext .js"
+  },
+  "devDependencies": {
+    "eslint": "^8.57.0",
+    "jest": "^29.7.0"
+  }
+}
