@@ -32,3 +32,4 @@ The example shows how to:
    ![get build failure logs tool call](images/get-build-failure-logs-tool-call-and-auto-fix.png)
 9. Now you can make a commit to the repository and push it to GitHub. This will trigger a new build in CircleCI. You should see the build passing.
    ![successful build](images/successful-build.png)
+
